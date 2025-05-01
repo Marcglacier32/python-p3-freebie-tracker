@@ -23,7 +23,24 @@ class Dev(Base):
     __tablename__ = 'devs'
 
     id = Column(Integer(), primary_key=True)
-    name= Column(String())
+    name = Column(String())
 
     def __repr__(self):
         return f'<Dev {self.name}>'
+
+# Adding the Freebie Model
+class Freebie(Base):
+    __tablename__ = 'freebies'
+
+    id = Column(Integer, primary_key=True)
+    item_name = Column(String)
+    value = Column(Integer)
+    dev_id = Column(Integer, ForeignKey('devs.id'))
+    company_id = Column(Integer, ForeignKey('companies.id'))
+
+    # Relationships
+    dev = relationship("Dev", backref=backref("freebies", cascade="all, delete-orphan"))
+    company = relationship("Company", backref=backref("freebies", cascade="all, delete-orphan"))
+
+    def __repr__(self):
+        return f'<Freebie {self.item_name} from {self.company.name} for {self.dev.name}>'
